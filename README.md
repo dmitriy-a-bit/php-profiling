@@ -3,7 +3,7 @@
 ---
 
 # Installation
-`git clone git@github.com:dmitriy-a-bit/php-profiling.git`  
+`git clone https://github.com/dmitriy-a-bit/php-profiling.git`  
 `cd php-profiling`  
 `docker-compose up -d`  
 
