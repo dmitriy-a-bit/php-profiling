@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+    nginx:
+        # Билдим nginx
+        build: ./nginx
+        # маршрутизируем порты
+        ports:
+            - "80:80"
+        # монтируем директории с конфигами и логами
+        volumes:
+            - ./server-nginx.conf:/etc/nginx/conf.d/server.conf
+            - ./logs:/var/log/nginx
+        # nginx должен общаться с php контейнером
+        links:
+            - php
+    php:
+        build: ./php
+        ports:
+            - "9000:9000"
+        # Настраиваем докер для работы с ps, strace для дебаггинга
+        cap_add:
+            - "SYS_PTRACE"
+        security_opt:
+            - "seccomp=unconfined"

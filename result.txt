@@ -1,0 +1,26 @@
+Фильтруем вывод дебаггера
+
+strace -e trace=read -f $(pidof php-fpm | sed 's/\([0-9]*\)/\-p \1/g')
+strace: Process 7 attached
+strace: Process 6 attached
+strace: Process 1 attached
+[pid     6] read(4, "\1\1\0\1\0\10\0\0", 8) = 8
+[pid     6] read(4, "\0\1\0\0\0\0\0\0", 8) = 8
+[pid     6] read(4, "\1\4\0\1\1\310\0\0", 8) = 8
+[pid     6] read(4, "\17\rSCRIPT_FILENAME/app/test.php\f\0"..., 456) = 456
+[pid     6] read(4, "\1\4\0\1\0\0\0\0", 8) = 8
+[pid     6] read(6, "<?php\neval(gzinflate(base64_deco"..., 5426) = 5426
+strace: Process 181 attached
+[pid   181] read(12, "127.0.0.1\tlocalhost\n::1\tlocalhos"..., 4096) = 174
+[pid   181] read(12, "", 4096)          = 0
+[pid   181] +++ exited with 0 +++
+[pid     6] read(11, "-----BEGIN CERTIFICATE-----\nMIIH"..., 4096) = 4096
+[pid     6] read(11, "8B1\nRXxlDPiyN8+sD8+Nb/kZ94/sHvJw"..., 4096) = 4096
+[pid     6] read(11, "FoXDTMwMTIzMTE0MDgyNFowRDEL\nMAkG"..., 4096) = 4096
+[pid     6] read(11, "jgdYZ6k/oI2peVKVuRF4fn9tBb6dNqcm"..., 4096) = 4096
+
+Полный вывод дебаггера в файле strace.log
+
+В нем большое количество eval записей. 
+Смотрим файл /app/test.php и находим eval decode rot13 функции. 
+Для дальнейшей отладки привлекаем разработчиков =)
