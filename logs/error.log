@@ -695,3 +695,13 @@
 2022/10/19 19:30:49 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1024:524288
 2022/10/19 19:30:49 [notice] 1#1: start worker processes
 2022/10/19 19:30:49 [notice] 1#1: start worker process 19
+2022/10/20 13:45:15 [notice] 1#1: using the "epoll" event method
+2022/10/20 13:45:15 [notice] 1#1: nginx/1.23.2
+2022/10/20 13:45:15 [notice] 1#1: built by gcc 10.2.1 20210110 (Debian 10.2.1-6) 
+2022/10/20 13:45:15 [notice] 1#1: OS: Linux 5.4.0-128-generic
+2022/10/20 13:45:15 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1024:524288
+2022/10/20 13:45:15 [notice] 1#1: start worker processes
+2022/10/20 13:45:15 [notice] 1#1: start worker process 19
+2022/10/20 14:04:12 [error] 19#19: *11 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 172.20.0.1, server: nginx, request: "GET /test.php HTTP/1.1", upstream: "fastcgi://172.20.0.2:9000", host: "nginx"
+2022/10/20 14:05:50 [error] 19#19: *13 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 172.20.0.1, server: nginx, request: "GET /test.php HTTP/1.1", upstream: "fastcgi://172.20.0.2:9000", host: "nginx"
+2022/10/20 14:07:34 [error] 19#19: *17 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 172.20.0.1, server: nginx, request: "GET /test.php HTTP/1.1", upstream: "fastcgi://172.20.0.2:9000", host: "nginx"

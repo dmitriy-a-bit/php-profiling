@@ -1,26 +1,24 @@
-Фильтруем вывод дебаггера
+Получаем отчет выполнения скрипта, файл strace-summary.log
 
-strace -e trace=read -f $(pidof php-fpm | sed 's/\([0-9]*\)/\-p \1/g')
-strace: Process 7 attached
-strace: Process 6 attached
-strace: Process 1 attached
-[pid     6] read(4, "\1\1\0\1\0\10\0\0", 8) = 8
-[pid     6] read(4, "\0\1\0\0\0\0\0\0", 8) = 8
-[pid     6] read(4, "\1\4\0\1\1\310\0\0", 8) = 8
-[pid     6] read(4, "\17\rSCRIPT_FILENAME/app/test.php\f\0"..., 456) = 456
-[pid     6] read(4, "\1\4\0\1\0\0\0\0", 8) = 8
-[pid     6] read(6, "<?php\neval(gzinflate(base64_deco"..., 5426) = 5426
-strace: Process 181 attached
-[pid   181] read(12, "127.0.0.1\tlocalhost\n::1\tlocalhos"..., 4096) = 174
-[pid   181] read(12, "", 4096)          = 0
-[pid   181] +++ exited with 0 +++
-[pid     6] read(11, "-----BEGIN CERTIFICATE-----\nMIIH"..., 4096) = 4096
-[pid     6] read(11, "8B1\nRXxlDPiyN8+sD8+Nb/kZ94/sHvJw"..., 4096) = 4096
-[pid     6] read(11, "FoXDTMwMTIzMTE0MDgyNFowRDEL\nMAkG"..., 4096) = 4096
-[pid     6] read(11, "jgdYZ6k/oI2peVKVuRF4fn9tBb6dNqcm"..., 4096) = 4096
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 91.18    0.086388          11      7766           write
+  5.99    0.005677         189        30           epoll_wait
+  1.00    0.000948          86        11           poll
+  1.00    0.000943         188         5           close
+  0.23    0.000221         221         1           restart_syscall
+
+
+Из него видно что системный вызов write делает 7766 вызовов по 11 мс каждый и исполняется 91% времени исполнения скрипта
+
+Смотрим write вызовы, файл strace-write.log
+
+108   write(4, "\1\6\0\1\37\370\0\0X-Powered-By: PHP/8.1.11\r\nContent-type: text/html; charset=UTF-8\r\n\r\n<pre>--------------------------------------\n|        PHP BENCHMARK SCRIPT        |\n--------------------------------------\nStart : 2022-10-20 14:11:40\nServer : nginx@172.20.0.3\nPHP version : 8.1.11\nPlatform : Linux\n--------------------------------------\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code</b> on line <b>9</b><br />\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) :"..., 8192) = 8192
+108   write(4, "\1\6\0\1\37\370\0\0: eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code</b> on line <b>9</b><br />\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code</b> on line <b>9</b><br />\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d co"..., 8192) = 8192
+108   write(4, "\1\6\0\1\37\370\0\0ode(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code</b> on line <b>9</b><br />\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code</b> on line <b>9</b><br />\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval"..., 8192) = 8192
+108   write(4, "\1\6\0\1\37\370\0\0l()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code</b> on line <b>9</b><br />\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code</b> on line <b>9</b><br />\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1)"..., 8192) = 8192
+108   write(4, "\1\6\0\1\37\370\0\0) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code</b> on line <b>9</b><br />\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code</b> on line <b>9</b><br />\n<br />\n<b>Deprecated</b>:  Invalid characters passed for attempted conversion, these have been ignored in <b>/app/test.php(2) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d "..., 8192) = 8192
+
+Передаем информацию о проблемном месте разработчикам для исправления ситуации
 
 Полный вывод дебаггера в файле strace.log
-
-В нем большое количество eval записей. 
-Смотрим файл /app/test.php и находим eval decode rot13 функции. 
-Для дальнейшей отладки привлекаем разработчиков =)
